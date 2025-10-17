@@ -1,0 +1,34 @@
+{
+  "name": "luxor-operator",
+  "version": "1.0.0",
+  "description": "Kubernetes operator for simulated peering HTTP servers",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start:server": "node dist/server/index.js",
+    "start:operator": "node dist/operator/index.js",
+    "dev:server": "ts-node src/server/index.ts",
+    "dev:operator": "ts-node src/operator/index.ts"
+  },
+  "keywords": [
+    "kubernetes",
+    "operator",
+    "peering",
+    "http"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@kubernetes/client-node": "^0.20.0",
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "winston": "^3.11.0",
+    "chokidar": "^3.5.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2"
+  }
+}
