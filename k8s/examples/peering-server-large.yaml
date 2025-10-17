@@ -1,0 +1,22 @@
+apiVersion: luxor.io/v1
+kind: PeeringServer
+metadata:
+  name: peering-large
+  namespace: default
+spec:
+  # 5 replicas for larger deployment
+  replicas: 5
+  # Ping every 1 minute
+  pingInterval: 60000
+  # HTTP server port
+  port: 8080
+  # Docker image
+  image: peering-server:latest
+  # Resource allocation
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
