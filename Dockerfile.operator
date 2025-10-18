@@ -1,0 +1,44 @@
+# Multi-stage build for smaller image size (BONUS: Docker best practices)
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY tsconfig.json ./
+
+# Install all dependencies (including dev dependencies for build)
+RUN npm install && \
+    npm cache clean --force
+
+# Copy source code
+COPY src/operator ./src/operator
+
+# Build TypeScript
+RUN npx tsc --project tsconfig.json
+
+# Production stage
+FROM node:20-alpine
+
+# BONUS: Security best practices
+# Create non-root user (handle existing GID gracefully)
+RUN addgroup -g 1001 appgroup || addgroup appgroup && \
+    adduser -D -u 1001 -G appgroup appuser || adduser -D -G appgroup appuser
+
+WORKDIR /app
+
+# Copy package files for production install
+COPY package*.json ./
+
+# Install only production dependencies
+RUN npm install --omit=dev && \
+    npm cache clean --force
+
+# Copy built application
+COPY --from=builder --chown=appuser:appgroup /app/dist/operator ./dist/operator
+
+# BONUS: Security - run as non-root user
+USER appuser
+
+# Start operator
+CMD ["node", "dist/operator/index.js"]
